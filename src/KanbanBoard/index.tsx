@@ -4,6 +4,8 @@ import BoardBox from "../Components/BoardBox";
 import ToDoBoard from "../Components/Boards/ToDoBoard";
 import { ITask } from "../Components/BoardItemBox";
 import InProgressBoard from "../Components/Boards/InProgressBoard";
+import { HourlyRate } from "../constants/app.config";
+import DoneBoard from "../Components/Boards/DoneBoard";
 
 import moment from "moment";
 
@@ -34,6 +36,16 @@ const KanbanBoard: React.FC = (): JSX.Element => {
     setBoardData(tempBoardData);
   };
   
+  const resolveTask = (taskId: string) => {
+    const tempBoardData: ITask[] = Object.assign([], boardData);
+    const index = tempBoardData.findIndex((board) => board.id === taskId);
+    tempBoardData[index].status = "done";
+    const time = moment().diff(tempBoardData[index].startTime, "seconds");
+    tempBoardData[index].timeLoggedInSeconds = time;
+    tempBoardData[index].amount = (time / (60 * 60)) * HourlyRate;
+    setBoardData(tempBoardData);
+  };
+
   return (
     <>
       <Grid
@@ -55,12 +67,15 @@ const KanbanBoard: React.FC = (): JSX.Element => {
           <BoardBox title={"In Progress"}>
             <InProgressBoard
               tasks={boardData.filter((data) => data.status === "in-progress")}
-              onResolve={() => {}}
+              onResolve={resolveTask}
             />
           </BoardBox>
         </Grid>
         <Grid item sm={4}>
           <BoardBox title={"Done"}>
+            <DoneBoard
+              tasks={boardData.filter((data) => data.status === "done")}
+            />
           </BoardBox>
         </Grid>
       </Grid>
