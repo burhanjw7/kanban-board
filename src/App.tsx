@@ -1,10 +1,10 @@
 import { Container } from "@material-ui/core";
 import React from "react";
-
+import KanbanBoard from "./KanbanBoard";
 
 const App: React.FC = (): JSX.Element => (
   <Container maxWidth="md">
-    <h1> My Kanban Board </h1>
+    <KanbanBoard />
   </Container>
 );
 export default App;
